@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  web:
+    # plein d'options, correspondant à celles qu'on peut trouver pour une commande run
+    build: .
+    ports:
+      - "5001:5000"
+    volumes:
+    # en premier le chemin sur ta machine et après chemin sur le docker 
+    # exemple : ./src:/app/src/tp
+      - ./src:/app/src
+      - flask_migrations:/app/src/migrations
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    restart: always 
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: tp
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql_data:
+  flask_migrations:
