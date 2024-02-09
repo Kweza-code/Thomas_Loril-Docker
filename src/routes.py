@@ -1,7 +1,7 @@
-from flask import flask, request, jsonify, Blueprint
-from models import Reservation, Chambre, Client, db
-from datetime import datetime
-
+from flask import Blueprint, render_template
+from .database import db
+from .models import Chambre, Client, Reservation
+from flask import jsonify, request
 
 main = Blueprint('main', __name__)
 
@@ -9,11 +9,8 @@ main = Blueprint('main', __name__)
 def index():
     return jsonify({"message": "bonjour"})
 
-main = Blueprint('main', __name__)
-
 @main.route('/api/chambres', methods=['POST'])
 def ajouter_chambre():
-    data = request.get_json()
 
     # Vérification basique des données reçues
     if not data or 'numero' not in data or 'type' not in data or 'prix' not in data:
@@ -43,7 +40,6 @@ def modifier_chambre(id):
     if not chambre:
         return jsonify({'success': False, 'message': "Chambre non trouvée."}), 404
 
-    data = request.get_json()
     
     try:
         if 'numero' in data:
@@ -75,7 +71,6 @@ def supprimer_chambre(id):
 
 @main.route('/api/reservations', methods=['POST'])
 def creer_reservation():
-    data = request.get_json()
 
     # Vérification des données reçues
     if not all(key in data for key in ('id_client', 'date_arrivee', 'date_depart')):
